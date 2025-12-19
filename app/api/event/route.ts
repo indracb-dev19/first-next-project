@@ -2,6 +2,20 @@ import { Event } from "@/database";
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
+// get all events
+export async function GET(request: NextRequest) {
+    try {
+        await connectToDatabase();
+        const events = await Event.find().populate('bookings');
+        return new Response(JSON.stringify(events), { status: 200 });
+    } catch (error) {
+        console.error("Error fetching events:", error);
+        return new Response(JSON.stringify({ error: "Failed to fetch events" }), { status: 500 });
+    }
+}
+
+// create a new event
+
 export async function POST(request: NextRequest) {
     try {
         await connectToDatabase();
